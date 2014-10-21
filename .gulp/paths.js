@@ -12,28 +12,27 @@ module.exports = {
     appFiles: {
         js: [
             app + '/*.js',
-            app + '/components/*.js',
-            app + '/services/*.js',
-            app + '/views/*.js'
+            app + '/components/**/*.js',
+            app + '/services/**/*.js',
+            app + '/views/**/*.js'
         ],
 
         styl: [
             app + '/*.styl',
-            app + '/components/*.styl',
-            app + '/services/*.styl',
-            app + '/views/*.styl'
+            app + '/components/**/*.styl',
+            app + '/services/**/*.styl',
+            app + '/views/**/*.styl'
         ],
 
-        css: [
-            app + '/*.css',
-            app + '/components/*.css',
-            app + '/services/*.css',
-            app + '/views/*.css'
+        html: [
+            app + '/components/**/*.html',
+            app + '/services/**/*.html',
+            app + '/views/**/*.html'
         ],
 
-        images: app + '/images',
+        images: app + '/images/**',
 
-        fonts: app + '/fonts'
+        fonts: app + '/fonts/**'
     },
 
     // Vendor files
@@ -47,5 +46,15 @@ module.exports = {
         css: [
             libs + '/normalize-css/normalize.css'
         ]
-    }
+    },
+
+    productionFiles: [
+        dist + '/libs-*.{js,css}',
+        dist + '/app-*.{js,css}'
+    ],
+
+    developmentFiles: [
+        dist + '/libs.{js,css}',
+        dist + '/app.{js,css}'
+    ],
 };

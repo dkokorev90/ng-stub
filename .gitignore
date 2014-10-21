@@ -1,5 +1,5 @@
 .DS_Store
 dist
 .tmp
-app/libs
+libs
 node_modules
