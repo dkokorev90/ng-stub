@@ -1,0 +1,5 @@
+.DS_Store
+dist
+.tmp
+app/libs
+node_modules

@@ -1,0 +1,11 @@
+{
+    "name": "ng-simple",
+    "version": "0.1.0",
+    "dependencies": {
+        "angular": "1.2.26",
+        "angular-ui-router": "*",
+        "angular-sanitize": "*",
+        "lodash": "*",
+        "normalize-css": "*"
+    }
+}
