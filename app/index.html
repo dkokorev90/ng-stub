@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="ng-simple" ng-controller="appCtrl">
+<html ng-app="app" ng-controller="appCtrl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,13 +9,23 @@
     <link rel="shortcut icon" href="images/favicon.ico">
     <title>Test</title>
 
-    <!--inject:css-->
-    <!--endinject-->
+    <!-- bower:css -->
+    <!-- endbower -->
+
+    <!-- app:css -->
+    <!-- endinject -->
 </head>
 <body class="page">
+    <!--[if lt IE 9]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
     <div class="content" ui-view></div>
 
-    <!--inject:js-->
-    <!--endinject-->
+    <!-- bower:js -->
+    <!-- endbower -->
+
+    <!-- app:js -->
+    <!-- endinject -->
 </body>
 </html>

@@ -1,7 +1,4 @@
-angular.module('ng-simple', [
-    // cached templates (dynamic)
-    'app.tpl',
-
+angular.module('app', [
     // views
     'views.list',
 
