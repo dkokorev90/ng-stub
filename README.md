@@ -1,7 +1,7 @@
 ### Angular starter with [Gulp](http://gulpjs.com/)
 
 ```sh
-$ git clone git://github.com/molforp/ng-simple YOUR_PROJECT
+$ git clone git://github.com/molforp/ng-stub YOUR_PROJECT
 $ cd YOUR_PROJECT
 $ sudo npm -g install bower
 $ npm install
