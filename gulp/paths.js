@@ -24,7 +24,7 @@ module.exports = {
             app + 'views/**/*.styl'
         ],
 
-        css: tmp + '**/*.css',
+        css: tmp + 'styles/**/*.css',
 
         html: [
             app + 'components/**/*.html',

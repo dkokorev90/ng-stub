@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();
 var wiredep = require('wiredep');
 var paths = require('./paths.js');
 var browserSync = require('browser-sync');
+var nib = require('nib');
 var isServe = $.util.env.s || $.util.env.serve;
 var ENV = 'development';
 var isProd;
@@ -47,13 +48,17 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('styles:app', function() {
-    var dist = isProd ? paths.dist : paths.tmp;
+    var dist = isProd ? paths.dist : paths.tmp + 'styles',
+        cwdApp = process.cwd() + '/' + paths.app;
 
     return gulp.src(paths.appFiles.styl)
         .pipe($.changed(dist, { extension: '.css' }))
+        .pipe($.header('@import "nib"\n'))
         .pipe($.plumber())
-        .pipe($.stylus())
-        .pipe($.autoprefixer('last 3 version', '> 1%'))
+        .pipe($.stylus({
+            use: nib(),
+            import: [cwdApp + 'styl/vars']
+        }))
         .pipe($.if (isProd, $.concat('app.css')))
         .pipe($.if (isProd, $.minifyCss()))
         .pipe($.if (isProd, $.rev()))
@@ -98,11 +103,21 @@ gulp.task('tpls', function() {
             spare: true,
             quotes: true
         }))
-        .pipe($.angularTemplatecache('tpls.js', { module: 'app' }))
+        .pipe(gulp.dest(paths.dist + 'tpls'))
+        .pipe($.angularTemplatecache('tpls.js', { module: 'app', root: 'tpls/' }))
         .pipe($.uglify())
         .pipe($.rev())
         .pipe(gulp.dest(paths.dist))
         .pipe($.size({ title: 'tpls' }));
+});
+
+gulp.task('tpls:dev', function() {
+    var tplsDir = paths.tmp + 'tpls';
+
+    return gulp.src(paths.appFiles.html)
+        .pipe($.changed(tplsDir))
+        .pipe(gulp.dest(tplsDir))
+        .pipe($.size({ title: 'tpls:dev' }));
 });
 
 // Transfer images to 'dist/images' folder
@@ -119,7 +134,7 @@ gulp.task('fonts', function() {
         .pipe($.size({ title: 'fonts' }));
 });
 
-gulp.task('build:dev', ['styles:app'], function() {
+gulp.task('build:dev', ['styles:app', 'tpls:dev'], function() {
     return gulp.src(paths.app + 'index.html')
         .pipe($.inject(
             gulp.src(paths.appFiles.js.concat(paths.appFiles.css), { read: false }),
@@ -207,5 +222,6 @@ gulp.task('serve:prod', ['build:prod'], function() {
 });
 
 gulp.task('watch', function() {
+    gulp.watch(paths.appFiles.html, ['tpls:dev']);
     gulp.watch(paths.appFiles.styl, ['styles:app']);
 });
