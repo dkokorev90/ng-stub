@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();
 var wiredep = require('wiredep');
 var paths = require('./paths.js');
 var browserSync = require('browser-sync');
+var rewriteModule = require('http-rewrite-middleware');
 var nib = require('nib');
 var isServe = $.util.env.s || $.util.env.serve;
 var ENV = 'development';
@@ -37,6 +38,11 @@ function startSever(baseDir, files) {
         files: files,
         server: {
             baseDir: baseDir,
+            middleware: [
+                rewriteModule.getMiddleware([
+                    { from: '^.*(?=fonts|images)(fonts|images)/(.*)', to: '/$1/$2' }
+                ])
+            ]
         },
         open: false
     });
@@ -57,7 +63,10 @@ gulp.task('styles:app', function() {
         .pipe($.plumber())
         .pipe($.stylus({
             use: nib(),
-            import: [cwdApp + 'styl/vars']
+            import: [
+                cwdApp + 'styl/config',
+                cwdApp + 'styl/vars'
+            ]
         }))
         .pipe($.if (isProd, $.concat('app.css')))
         .pipe($.if (isProd, $.minifyCss()))
