@@ -29,7 +29,7 @@ if [ "$git_cached_js" ]; then
     $NPM_BIN/jscs $git_cached_js || exit 1
 fi
 
-if [ "$git_cached_css" ]; then
-    $NPM_BIN/csscomb -v $git_cached_css
-    git add $git_cached_css
-fi
+# if [ "$git_cached_css" ]; then
+#     $NPM_BIN/csscomb -v $git_cached_css
+#     git add $git_cached_css
+# fi
