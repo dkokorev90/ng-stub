@@ -33,19 +33,22 @@ module.exports = {
                 loader: 'style!css!autoprefixer?{browsers:["> 1%", "last 2 versions", "ff >= 15", "ie >= 9", "Opera 12.1"]}!stylus'
             },
             { test: /\.html$/, loader: 'html' },
-            { test: /\.(jpe?g|png|gif|svg)$/i, loaders: ['image?bypassOnDebug&optimizationLevel=5&interlaced=false'] }
+            { test: /\.(jpe?g|png|gif|svg)$/i, loaders: ['image?bypassOnDebug&optimizationLevel=5&interlaced=false'] },
+            { test: /\.json$/, loader: 'json' }
         ]
     },
     stylus: {
         use: [nib()]
     },
     resolve: {
+        alias: {
+        },
         root: [
             path.join(__dirname, 'app'),
             path.join(__dirname, 'bower_components'),
             path.join(__dirname, 'node_modules')
         ],
-        moduleDirectories: ['bower_components', 'node_modules']
+        // moduleDirectories: ['bower_components', 'node_modules']
     },
     externals: {
 
