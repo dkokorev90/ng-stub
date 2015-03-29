@@ -1,5 +1,5 @@
 .DS_Store
-dist
 .tmp
-libs
+www
+bower_components
 node_modules

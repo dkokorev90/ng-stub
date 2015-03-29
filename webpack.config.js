@@ -1,3 +1,5 @@
+// jscs:disable maximumLineLength
+
 var webpack = require('webpack');
 var path = require('path');
 var nib = require('nib');
@@ -11,7 +13,8 @@ var envVars = new webpack.DefinePlugin({
 module.exports = {
     context: path.join(__dirname, 'app'),
     entry: {
-        app: './app.js'
+        app: './app.js',
+        common: ['angular', 'angular-ui-router', 'angular-animate', 'angular-sanitize', 'lodash-node']
     },
     output: {
         path: path.join(__dirname, 'www'),
@@ -20,6 +23,7 @@ module.exports = {
     },
     module: {
         loaders: [
+            { test: /\.js$/, loader: 'strict', exclude: /node_modules/ },
             {
                 test: /\.css$/,
                 loader: 'style!css!autoprefixer?{browsers:["> 1%", "last 2 versions", "ff >= 15", "ie >= 9", "Opera 12.1"]}'
@@ -29,11 +33,7 @@ module.exports = {
                 loader: 'style!css!autoprefixer?{browsers:["> 1%", "last 2 versions", "ff >= 15", "ie >= 9", "Opera 12.1"]}!stylus'
             },
             { test: /\.html$/, loader: 'html' },
-            { test: /\.(jpe?g|png|gif|svg)$/i, loaders: ['image?bypassOnDebug&optimizationLevel=5&interlaced=false'] },
-            {
-                test: /\.html$/,
-                loader: 'ngtemplate?relativeTo=' + path.join(__dirname, 'app/') + '!html'
-            }
+            { test: /\.(jpe?g|png|gif|svg)$/i, loaders: ['image?bypassOnDebug&optimizationLevel=5&interlaced=false'] }
         ]
     },
     stylus: {
@@ -54,9 +54,9 @@ module.exports = {
         envVars,
 
         new webpack.ProvidePlugin({
-            _: 'lodash'
+            _: 'lodash-node'
         }),
-        new webpack.optimize.CommonsChunkPlugin('common.build.js'),
+        new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js'),
         new webpack.optimize.DedupePlugin(),
         // new webpack.ResolverPlugin(new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])),
 
