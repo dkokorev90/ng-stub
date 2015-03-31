@@ -1,7 +1,10 @@
-require('app.styl');
+require('style');
 
 var angular = require('angular');
 var app = angular.module('app', [
+    // components
+    require('./components/header'),
+
     // views
     require('./views/main'),
     require('./views/login'),
@@ -12,11 +15,7 @@ var app = angular.module('app', [
     require('angular-ui-router')
 ]);
 
-app
-.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-})
-.controller('appCtrl', function($scope) {
+function appCtrl($scope) {
     $scope.$on('$stateChangeStart', function() {});
 
     $scope.$on('$stateChangeSuccess', function(e, toState) {
@@ -28,4 +27,14 @@ app
     });
 
     $scope.$on('$stateChangeError', function() {});
-});
+}
+
+app
+// env config
+.constant('config', require('./configs/env/' + ENV + '.js'))
+
+.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+})
+
+.controller('appCtrl', appCtrl);

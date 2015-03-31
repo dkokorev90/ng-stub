@@ -1,21 +1,25 @@
-require('./login.styl');
-
 var appModule = angular.module('app.views.login', [
     require('angular-ui-router')
 ]);
 
-appModule
-.config(function($stateProvider) {
+function config($stateProvider) {
     $stateProvider
         .state('login', {
             url: '/login',
-            template: require('./login.html'),
-            controller: 'viewLoginCtrl',
+            template: require('./tpl'),
+            controller: viewLoginCtrl,
+            controllerAs: 'vm',
             data: { pageTitle: 'Login' },
         });
-})
-.controller('viewLoginCtrl', function($scope) {
-    $scope.name = 'Dima';
-});
+}
+
+function viewLoginCtrl() {
+    this.name = 'Dima';
+}
+
+appModule
+    .config(config);
+
+require('./style');
 
 module.exports = appModule.name;

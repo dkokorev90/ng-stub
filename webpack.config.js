@@ -2,25 +2,60 @@
 
 var webpack = require('webpack');
 var path = require('path');
-var nib = require('nib');
+var rimraf = require('rimraf');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+var env = process.env.ENV || 'development';
+var isProd = env === 'production';
+var appDir = path.join(__dirname, 'app');
+var distDir = path.join(__dirname, 'www');
 
-var envVars = new webpack.DefinePlugin({
-    IS_DEV: process.env.ENV === 'dev'
-});
+var plugins = [
+    new webpack.DefinePlugin({
+        ENV: JSON.stringify(env),
+        IS_DEV: env === 'development'
+    }),
+
+    new webpack.ProvidePlugin({
+        _: 'lodash-node'
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js'),
+    new webpack.optimize.DedupePlugin(),
+
+    new HtmlWebpackPlugin({ template: 'app/index.html' }),
+    new ngAnnotatePlugin({ add: true })
+];
+
+var imgLoader = [
+    'file?name=assets/[sha512:hash:hex:18].[ext]',
+];
+
+if (isProd) {
+    plugins.concat([
+        new webpack.optimize.UglifyJsPlugin({ output: { comments: false } })
+    ]);
+
+    imgLoader.push('image?bypassOnDebug&optimizationLevel=5&interlaced=false');
+}
+
+// remove build directory
+rimraf.sync(distDir);
 
 module.exports = {
-    context: path.join(__dirname, 'app'),
+    context: appDir,
+
     entry: {
-        app: './app.js',
+        app: './index.js',
         common: ['angular', 'angular-ui-router', 'angular-animate', 'angular-sanitize', 'lodash-node']
     },
+
     output: {
-        path: path.join(__dirname, 'www'),
+        path: distDir,
         filename: '[name].build.js',
         chunkFilename: '[name].chunk.js'
     },
+
     module: {
         loaders: [
             { test: /\.js$/, loader: 'strict', exclude: /node_modules/ },
@@ -32,38 +67,25 @@ module.exports = {
                 test: /\.styl$/,
                 loader: 'style!css!autoprefixer?{browsers:["> 1%", "last 2 versions", "ff >= 15", "ie >= 9", "Opera 12.1"]}!stylus'
             },
+            {
+                test: /\.(woff|woff2)(\?.*)?$/,
+                loader: 'url?name=assets/[sha512:hash:hex:18].[ext]&limit=5000&mimetype=application/font-woff'
+            },
+            { test: /\.(eot|ttf)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
+            { test: /\.(png|jpe?g|gif|svg(#.*)?)$/i, loaders: imgLoader },
             { test: /\.html$/, loader: 'html' },
-            { test: /\.(jpe?g|png|gif|svg)$/i, loaders: ['image?bypassOnDebug&optimizationLevel=5&interlaced=false'] },
             { test: /\.json$/, loader: 'json' }
         ]
     },
-    stylus: {
-        use: [nib()]
-    },
+
     resolve: {
-        alias: {
-        },
+        extensions: ['', '.js', '.json', '.styl', '.css', '.html'],
         root: [
-            path.join(__dirname, 'app'),
+            appDir,
             path.join(__dirname, 'bower_components'),
             path.join(__dirname, 'node_modules')
-        ],
-        // moduleDirectories: ['bower_components', 'node_modules']
+        ]
     },
-    externals: {
 
-    },
-    plugins: [
-        envVars,
-
-        new webpack.ProvidePlugin({
-            _: 'lodash-node'
-        }),
-        new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js'),
-        new webpack.optimize.DedupePlugin(),
-        // new webpack.ResolverPlugin(new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])),
-
-        new HtmlWebpackPlugin({ template: 'app/index.html' }),
-        new ngAnnotatePlugin({ add: true })
-    ]
+    plugins: plugins
 };

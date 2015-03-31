@@ -1,0 +1,7 @@
+<header class="header">
+    <a ui-sref="main" class="link header__logo">{{ header.logoText }}</a>
+
+    <ul class="header__nav">
+        <li class="header__nav-item" ng-repeat="item in header.navItems">{{ $index + 1 + ' ' + item }}</li>
+    </ul>
+</header>

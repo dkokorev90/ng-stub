@@ -9,7 +9,6 @@
     "indent": 4,
     "expr": true,
     "immed": true,
-    "latedef": true,
     "newcap": true,
     "noarg": true,
     "noempty": true,
@@ -19,6 +18,8 @@
     "devel": false,
     "debug": false,
     "globals": {
-        "angular": true
+        "angular": true,
+        "ENV": true,
+        "IS_DEV": true
     }
 }

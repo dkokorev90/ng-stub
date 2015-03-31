@@ -1,5 +1,8 @@
 .DS_Store
 .tmp
+*~
+.idea
+.project
 npm-debug.log
 www
 bower_components

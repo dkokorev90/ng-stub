@@ -1,25 +1,31 @@
-require('./main.styl');
-
 var appModule = angular.module('app.views.main', [
     require('angular-ui-router')
 ]);
 
-appModule
-.config(function($stateProvider) {
+function config($stateProvider) {
     $stateProvider
         .state('main', {
             url: '/',
-            template: require('./main.html'),
-            controller: 'viewMainCtrl',
+            template: require('./tpl'),
+            controller: viewMainCtrl,
+            controllerAs: 'vm',
             data: { pageTitle: 'Main' }
         });
-})
-.controller('viewMainCtrl', function($scope) {
-    $scope.items = [
+}
+
+function viewMainCtrl() {
+    var vm = this;
+
+    vm.items = [
         { text: 'something interesting' },
         { text: 'another thing' },
         { text: 'something great!' }
     ];
-});
+}
+
+appModule
+    .config(config);
+
+require('./style');
 
 module.exports = appModule.name;
