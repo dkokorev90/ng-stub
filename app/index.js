@@ -15,6 +15,10 @@ var app = angular.module('app', [
     require('angular-ui-router')
 ]);
 
+function config($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+}
+
 function appCtrl($scope) {
     $scope.$on('$stateChangeStart', function() {});
 
@@ -30,11 +34,7 @@ function appCtrl($scope) {
 }
 
 app
-// env config
-.constant('config', require('./configs/env/' + ENV + '.js'))
-
-.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-})
-
-.controller('appCtrl', appCtrl);
+    // env config
+    .constant('config', require('./configs/env/' + ENV + '.js'))
+    .config(config)
+    .controller('appCtrl', appCtrl);
