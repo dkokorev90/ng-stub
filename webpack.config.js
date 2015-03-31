@@ -5,6 +5,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+var BowerWebpackPlugin = require('bower-webpack-plugin');
 var env = process.env.ENV || 'development';
 var isProd = env === 'production';
 var appDir = path.join(__dirname, 'app');
@@ -17,11 +18,18 @@ var plugins = [
     }),
 
     new webpack.ProvidePlugin({
-        _: 'lodash-node'
+        _: 'lodash'
     }),
 
-    new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js'),
+    new BowerWebpackPlugin({
+        modulesDirectories: ['bower_components'],
+        manifestFiles:      'bower.json',
+        includes:           /.*/
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js', null, Infinity),
     new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(true),
 
     new HtmlWebpackPlugin({ template: 'app/index.html' }),
     new ngAnnotatePlugin({ add: true })
@@ -33,10 +41,16 @@ var imgLoader = [
 
 if (isProd) {
     plugins.concat([
-        new webpack.optimize.UglifyJsPlugin({ output: { comments: false } })
+        new webpack.optimize.UglifyJsPlugin({
+            mangle: true,
+            compress: {
+                drop_console: true
+            },
+            output: { comments: false }
+        })
     ]);
 
-    imgLoader.push('image?bypassOnDebug&optimizationLevel=5&interlaced=false');
+    imgLoader.push('image?bypassOnDebug&optimizationLevel=5&');
 }
 
 // remove build directory
@@ -47,7 +61,7 @@ module.exports = {
 
     entry: {
         app: './index.js',
-        common: ['angular', 'angular-ui-router', 'angular-animate', 'angular-sanitize', 'lodash-node']
+        common: ['libs']
     },
 
     output: {
@@ -71,15 +85,20 @@ module.exports = {
                 test: /\.(woff|woff2)(\?.*)?$/,
                 loader: 'url?name=assets/[sha512:hash:hex:18].[ext]&limit=5000&mimetype=application/font-woff'
             },
-            { test: /\.(eot|ttf)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
-            { test: /\.(png|jpe?g|gif|svg(#.*)?)$/i, loaders: imgLoader },
+            { test: /\.(eot|ttf|svg)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
+            { test: /\.(png|jpe?g|gif)$/i, loaders: imgLoader },
             { test: /\.html$/, loader: 'html' },
-            { test: /\.json$/, loader: 'json' }
+            { test: /i18n\/.*\.json(\?.*)?$/, loader: 'file?path=i18n/&name=i18n/[name].[ext]' }
+        ],
+
+        noParse: [
+            /bower_components/
         ]
     },
 
     resolve: {
         extensions: ['', '.js', '.json', '.styl', '.css', '.html'],
+
         root: [
             appDir,
             path.join(__dirname, 'bower_components'),
