@@ -1,5 +1,3 @@
-module.exports = angular
-    .module('app.data', [
-        require('./user')
-    ])
-    .name;
+module.exports = angular.module('app.data', [
+    require('./user')
+]).name;

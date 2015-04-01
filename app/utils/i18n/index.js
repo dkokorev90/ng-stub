@@ -2,6 +2,11 @@ require('angular-translate');
 require('angular-translate-loader-static-files');
 require('ngstorage');
 
+var appModule = angular.module('app.utils.i18n', [
+    'pascalprecht.translate',
+    'ngStorage'
+]);
+
 function config($translateProvider) {
     var availableLangs = ['ru', 'en'];
     var sngLangs = ['ru', 'uk', 'be', 'kk'];
@@ -54,11 +59,8 @@ function myLocalStorage($localStorage) {
     };
 }
 
-module.exports = angular
-    .module('app.utils.i18n', [
-        'pascalprecht.translate',
-        'ngStorage'
-    ])
+appModule
     .config(config)
-    .factory('myLocalStorage', myLocalStorage)
-    .name;
+    .factory('myLocalStorage', myLocalStorage);
+
+module.exports = appModule.name;

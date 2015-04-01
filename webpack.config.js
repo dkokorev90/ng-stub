@@ -16,7 +16,8 @@ var plugins = [
     new webpack.DefinePlugin({
         ENV: JSON.stringify(env),
         IS_DEV: env === 'development',
-        VERSION: JSON.stringify(require('./package.json').version)
+        VERSION: JSON.stringify(require('./package.json').version),
+        ON_TEST: env === 'test'
     }),
 
     new webpack.ProvidePlugin({

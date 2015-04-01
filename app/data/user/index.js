@@ -1,3 +1,5 @@
+var appModule = angular.module('app.data.user', []);
+
 function userService() {
     var users = ['John', 'Kenny'];
 
@@ -15,7 +17,8 @@ function userService() {
     };
 }
 
-module.exports = angular
-    .module('app.data.user', [])
-    .factory('User', userService)
-    .name;
+appModule
+    .factory('User', userService);
+
+module.exports = appModule.name;
+

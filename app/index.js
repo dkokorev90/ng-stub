@@ -1,3 +1,13 @@
+var app = angular.module('app', [
+    // default config + env config
+    require('./configs/app'),
+    require('./components'),
+    require('./views'),
+    require('./utils'),
+    require('./data'),
+    require('libs')
+]);
+
 function config($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 }
@@ -16,16 +26,7 @@ function appCtrl($scope) {
     $scope.$on('$stateChangeError', function() {});
 }
 
-angular
-    .module('app', [
-        // default config + env config
-        require('./configs/app'),
-        require('./components'),
-        require('./views'),
-        require('./utils'),
-        require('./data'),
-        require('libs')
-    ])
+app
     .config(config)
     .controller('appCtrl', appCtrl);
 

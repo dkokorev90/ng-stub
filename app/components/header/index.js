@@ -1,3 +1,5 @@
+var appModule = angular.module('app.components.header', []);
+
 function headerDir() {
     return {
         replace: true,
@@ -20,10 +22,10 @@ function myHeaderCtrl() {
     }
 }
 
-module.exports = angular
-    .module('app.components.header', [])
+appModule
     .directive('myHeader', headerDir)
-    .controller('myHeaderCtrl', myHeaderCtrl)
-    .name;
+    .controller('myHeaderCtrl', myHeaderCtrl);
 
 require('./style');
+
+module.exports = appModule.name;

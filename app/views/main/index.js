@@ -1,3 +1,7 @@
+var appModule = angular.module('app.views.main', [
+    require('angular-ui-router')
+]);
+
 function config($stateProvider) {
     $stateProvider
         .state('main', {
@@ -19,11 +23,9 @@ function viewMainCtrl() {
     ];
 }
 
-module.exports = angular
-    .module('app.views.main', [
-        require('angular-ui-router')
-    ])
-    .config(config)
-    .name;
+appModule
+    .config(config);
 
 require('./style');
+
+module.exports = appModule.name;
