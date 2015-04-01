@@ -1,4 +1,11 @@
-var appModule = angular.module('app.components.header', []);
+function headerDir() {
+    return {
+        replace: true,
+        scope: {},
+        template: require('./tpl'),
+        controller: 'myHeaderCtrl as header'
+    };
+}
 
 function myHeaderCtrl() {
     var vm = this;
@@ -13,19 +20,10 @@ function myHeaderCtrl() {
     }
 }
 
-function headerDir() {
-    return {
-        replace: true,
-        scope: {},
-        template: require('./tpl'),
-        controller: 'myHeaderCtrl as header'
-    };
-}
-
-appModule
+module.exports = angular
+    .module('app.components.header', [])
     .directive('myHeader', headerDir)
-    .controller('myHeaderCtrl', myHeaderCtrl);
+    .controller('myHeaderCtrl', myHeaderCtrl)
+    .name;
 
 require('./style');
-
-module.exports = appModule.name;

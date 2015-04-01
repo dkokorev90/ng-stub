@@ -20,6 +20,7 @@
     "globals": {
         "angular": true,
         "ENV": true,
-        "IS_DEV": true
+        "IS_DEV": true,
+        "VERSION": true
     }
 }

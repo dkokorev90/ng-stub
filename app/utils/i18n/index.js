@@ -1,52 +1,28 @@
-// For more info: http://angular-translate.github.io/
-
 require('angular-translate');
 require('angular-translate-loader-static-files');
 require('ngstorage');
 
-var appModule = angular.module('app.utils.i18n', [
-    'pascalprecht.translate',
-    'ngStorage'
-]);
-
 function config($translateProvider) {
+    var availableLangs = ['ru', 'en'];
+    var sngLangs = ['ru', 'uk', 'be', 'kk'];
+    var langsAll = {};
+
+    function fillLangs(langs, lang) {
+        langs.forEach(function() {
+            langsAll[lang] = lang;
+            langsAll[lang + '-*'] = lang;
+            langsAll[lang + '_*'] = lang;
+        });
+    }
+
+    fillLangs(sngLangs, 'ru');
+
     $translateProvider
         .useStaticFilesLoader({
             prefix: '/i18n/',
-            suffix: '.json?'
+            suffix: '.json?' + Date.now()
         })
-        .registerAvailableLanguageKeys(['en', 'ru'], {
-            'ru_RU': 'ru',
-            'ru-RU': 'ru',
-            'ru_UA': 'ru',
-            'ru-UA': 'ru',
-            'ua':    'ru',
-            'ru-MD': 'ru',
-            'ru_MD': 'ru',
-            'be-BY': 'ru',
-            'be_BY': 'ru',
-            'be':    'ru',
-            'kk':    'ru',
-            'ka-GE': 'ru',
-            'ka':    'ru',
-            'kk-KZ': 'ru',
-            'et':    'ru',
-            'et-EE': 'ru',
-            'lv':    'ru',
-            'lv-LV': 'ru',
-            'lt':    'ru',
-            'lt-LT': 'ru',
-            'az':    'ru',
-            'az-AZ-Cyrl': 'ru',
-            'az-AZ': 'ru',
-            'hy':    'ru',
-            'hy-AM': 'ru',
-            'uz':    'ru',
-            'uz-UZ-Cyrl': 'ru',
-            'uz-UZ': 'ru',
-            'ky':    'ru',
-            'ky-KG': 'ru'
-        })
+        .registerAvailableLanguageKeys(availableLangs, langsAll)
         .determinePreferredLanguage()
         .fallbackLanguage('en')
         .useSanitizeValueStrategy('escaped')
@@ -78,11 +54,11 @@ function myLocalStorage($localStorage) {
     };
 }
 
-require('i18n/ru.json');
-require('i18n/en.json');
-
-appModule
+module.exports = angular
+    .module('app.utils.i18n', [
+        'pascalprecht.translate',
+        'ngStorage'
+    ])
     .config(config)
-    .factory('myLocalStorage', myLocalStorage);
-
-module.exports = appModule.name;
+    .factory('myLocalStorage', myLocalStorage)
+    .name;

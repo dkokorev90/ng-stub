@@ -18,14 +18,14 @@ function appCtrl($scope) {
 
 angular
     .module('app', [
+        // default config + env config
+        require('./configs/app'),
         require('./components'),
         require('./views'),
         require('./utils'),
+        require('./data'),
         require('libs')
     ])
-    // env config
-    .constant('config', require('./configs/env/' + ENV + '.js'))
-    // .constant('version', require('../package.json').version)
     .config(config)
     .controller('appCtrl', appCtrl);
 

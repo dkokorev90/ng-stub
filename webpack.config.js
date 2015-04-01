@@ -3,6 +3,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var rimraf = require('rimraf');
+var dir = require('node-dir');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
@@ -14,17 +15,12 @@ var distDir = path.join(__dirname, 'www');
 var plugins = [
     new webpack.DefinePlugin({
         ENV: JSON.stringify(env),
-        IS_DEV: env === 'development'
+        IS_DEV: env === 'development',
+        VERSION: JSON.stringify(require('./package.json').version)
     }),
 
     new webpack.ProvidePlugin({
         _: 'lodash'
-    }),
-
-    new BowerWebpackPlugin({
-        modulesDirectories: ['bower_components'],
-        manifestFiles:      'bower.json',
-        includes:           /.*/
     }),
 
     new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js', null, Infinity),
@@ -32,7 +28,13 @@ var plugins = [
     new webpack.optimize.OccurenceOrderPlugin(true),
 
     new HtmlWebpackPlugin({ template: 'app/index.html' }),
-    new ngAnnotatePlugin({ add: true })
+    new ngAnnotatePlugin({ add: true }),
+    new BowerWebpackPlugin({
+        modulesDirectories: ['bower_components'],
+        manifestFiles: 'bower.json',
+        includes: /.*/
+    }),
+    new TransferWebpackPlugin({ from: 'app/i18n', to: 'i18n' })
 ];
 
 var imgLoader = [
@@ -50,7 +52,7 @@ if (isProd) {
         })
     ]);
 
-    imgLoader.push('image?bypassOnDebug&optimizationLevel=5&');
+    imgLoader.push('image?bypassOnDebug&optimizationLevel=5');
 }
 
 // remove build directory
@@ -88,7 +90,7 @@ module.exports = {
             { test: /\.(eot|ttf|svg)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
             { test: /\.(png|jpe?g|gif)$/i, loaders: imgLoader },
             { test: /\.html$/, loader: 'html' },
-            { test: /i18n\/.*\.json(\?.*)?$/, loader: 'file?path=i18n/&name=i18n/[name].[ext]' }
+            { test: /\.json(\?.*)?$/, loader: 'json' }
         ],
 
         noParse: [
@@ -108,3 +110,38 @@ module.exports = {
 
     plugins: plugins
 };
+
+function TransferWebpackPlugin(options) {
+    options = options || {};
+
+    this.apply = function(compiler) {
+        compiler.plugin('emit', function(compilation, cb) {
+            dir.readFiles(path.resolve(__dirname, options.from),
+                function(err, content, filename, next) {
+                    if (err) {
+                        compilation.errors.push(new Error('TransferWebpackPlugin: Unable to transfer file: ' + filename));
+                    }
+
+                    var distName = path.join(options.to, path.basename(filename, content));
+
+                    compilation.assets[distName] = {
+                        source: function() {
+                            return content;
+                        },
+                        size: function() {
+                            return content.length;
+                        }
+                    };
+
+                    next();
+                },
+                function(err) {
+                    if (err) {
+                        compilation.errors.push(new Error('TransferWebpackPlugin: Something wrong'));
+                    }
+
+                    cb();
+                });
+        });
+    };
+}

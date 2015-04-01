@@ -1,7 +1,3 @@
-var appModule = angular.module('app.views.login', [
-    require('angular-ui-router')
-]);
-
 function config($stateProvider) {
     $stateProvider
         .state('login', {
@@ -13,13 +9,17 @@ function config($stateProvider) {
         });
 }
 
-function viewLoginCtrl() {
+function viewLoginCtrl(User) {
     this.name = 'Dima';
+
+    this.users = User.getUsers();
 }
 
-appModule
-    .config(config);
+module.exports = angular
+    .module('app.views.login', [
+        require('angular-ui-router')
+    ])
+    .config(config)
+    .name;
 
 require('./style');
-
-module.exports = appModule.name;

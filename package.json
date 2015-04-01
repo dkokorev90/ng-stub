@@ -16,6 +16,7 @@
     "autoprefixer-loader": "^1.2.0",
     "bower-webpack-plugin": "^0.1.6",
     "css-loader": "^0.9.1",
+    "dir": "^0.1.2",
     "file-loader": "^0.8.1",
     "git-hooks": "0.0.10",
     "html-loader": "^0.2.3",
