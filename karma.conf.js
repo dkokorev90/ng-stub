@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
 var isSingleRun = process.env.TEST === 'single';
@@ -10,6 +11,10 @@ var webpackConf = {
             modulesDirectories: ['bower_components'],
             manifestFiles: 'bower.json',
             includes: /.*/
+        }),
+
+        new webpack.ProvidePlugin({
+            _: 'lodash'
         })
     ],
     devtool: 'eval'
