@@ -51,7 +51,6 @@
     "webpack-dev-server": "^1.7.0"
   },
   "dependencies": {
-    "js-data": "^1.6.0",
-    "js-data-angular": "^2.2.3"
+
   }
 }
