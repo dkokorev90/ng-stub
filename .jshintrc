@@ -9,7 +9,6 @@
     "indent": 4,
     "expr": true,
     "immed": true,
-    "latedef": true,
     "newcap": true,
     "noarg": true,
     "noempty": true,
@@ -18,7 +17,13 @@
     "browser": true,
     "devel": false,
     "debug": false,
+    "mocha": true,
     "globals": {
-        "angular": true
+        "angular": true,
+        "ENV": true,
+        "IS_DEV": true,
+        "VERSION": true,
+        "inject": true,
+        "assert": true
     }
 }

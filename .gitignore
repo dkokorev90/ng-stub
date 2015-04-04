@@ -1,5 +1,9 @@
 .DS_Store
-dist
 .tmp
-libs
+*~
+.idea
+.project
+npm-debug.log
+www
+bower_components
 node_modules
