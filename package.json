@@ -10,8 +10,7 @@
     "install": "bower install",
     "start": "ENV=development webpack-dev-server --colors --content-base www/ --hot --inline --devtool eval",
     "build": "ENV=production webpack -p",
-    "test": "TEST=single ./node_modules/karma/bin/karma start",
-    "testing": "./node_modules/karma/bin/karma start"
+    "test": "./node_modules/karma/bin/karma start --single-run"
   },
   "devDependencies": {
     "angular-mocks": "^1.3.15",

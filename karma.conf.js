@@ -1,7 +1,6 @@
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
-var isSingleRun = process.env.TEST === 'single';
 
 var webpackConf = {
     module: webpackConfig.module,
@@ -72,7 +71,7 @@ module.exports = function(config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: isSingleRun,
+        singleRun: false,
 
         plugins: [
             require('karma-webpack'),
