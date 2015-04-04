@@ -5,7 +5,8 @@ function headerDir() {
         replace: true,
         scope: {},
         template: require('./tpl'),
-        controller: 'myHeaderCtrl as header'
+        controller: myHeaderCtrl,
+        controllerAs: 'header'
     };
 }
 
@@ -23,8 +24,7 @@ function myHeaderCtrl() {
 }
 
 appModule
-    .directive('myHeader', headerDir)
-    .controller('myHeaderCtrl', myHeaderCtrl);
+    .directive('myHeader', headerDir);
 
 require('./style');
 
