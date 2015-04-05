@@ -1,6 +1,5 @@
 var app = angular.module('app', [
-    // default config + env config
-    require('./configs/app'),
+    require('./configs'),
     require('./components'),
     require('./views'),
     require('./utils'),
