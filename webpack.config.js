@@ -4,7 +4,7 @@ var webpack = require('webpack');
 var path = require('path');
 var rimraf = require('rimraf');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+var NgAnnotatePlugin = require('ng-annotate-webpack-plugin');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
 var TransferWebpackPlugin = require('transfer-webpack-plugin');
 var env = process.env.ENV || 'development';
@@ -29,7 +29,7 @@ var plugins = [
     new webpack.optimize.OccurenceOrderPlugin(true),
 
     new HtmlWebpackPlugin({ template: 'app/index.html' }),
-    new ngAnnotatePlugin({ add: true }),
+    new NgAnnotatePlugin({ add: true }),
     new BowerWebpackPlugin(),
     new TransferWebpackPlugin([
         { from: 'i18n', to: 'i18n' },
@@ -38,7 +38,7 @@ var plugins = [
 ];
 
 var imgLoader = [
-    'file?name=assets/[sha512:hash:hex:18].[ext]',
+    'file?name=assets/[sha512:hash:hex:18].[ext]'
 ];
 
 if (isProd) {
