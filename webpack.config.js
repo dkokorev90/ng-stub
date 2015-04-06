@@ -3,10 +3,10 @@
 var webpack = require('webpack');
 var path = require('path');
 var rimraf = require('rimraf');
-var dir = require('node-dir');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 var BowerWebpackPlugin = require('bower-webpack-plugin');
+var TransferWebpackPlugin = require('transfer-webpack-plugin');
 var env = process.env.ENV || 'development';
 var isProd = env === 'production';
 var appDir = path.join(__dirname, 'app');
@@ -30,12 +30,11 @@ var plugins = [
 
     new HtmlWebpackPlugin({ template: 'app/index.html' }),
     new ngAnnotatePlugin({ add: true }),
-    new BowerWebpackPlugin({
-        modulesDirectories: ['bower_components'],
-        manifestFiles: 'bower.json',
-        includes: /.*/
-    }),
-    new TransferWebpackPlugin({ from: 'app/i18n', to: 'i18n' })
+    new BowerWebpackPlugin(),
+    new TransferWebpackPlugin([
+        { from: 'i18n', to: 'i18n' },
+        { from: 'root' }
+    ])
 ];
 
 var imgLoader = [
@@ -88,7 +87,7 @@ module.exports = {
                 test: /\.(woff|woff2)(\?.*)?$/,
                 loader: 'url?name=assets/[sha512:hash:hex:18].[ext]&limit=5000&mimetype=application/font-woff'
             },
-            { test: /\.(eot|ttf|svg)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
+            { test: /\.(eot|ttf|otf|svg)([#\?].*)?$/, loader: 'file?name=assets/[sha512:hash:hex:18].[ext]' },
             { test: /\.(png|jpe?g|gif)$/i, loaders: imgLoader },
             { test: /\.html$/, loader: 'html' },
             { test: /\.json(\?.*)?$/, loader: 'json' }
@@ -111,38 +110,3 @@ module.exports = {
 
     plugins: plugins
 };
-
-function TransferWebpackPlugin(options) {
-    options = options || {};
-
-    this.apply = function(compiler) {
-        compiler.plugin('emit', function(compilation, cb) {
-            dir.readFiles(path.resolve(__dirname, options.from),
-                function(err, content, filename, next) {
-                    if (err) {
-                        compilation.errors.push(new Error('TransferWebpackPlugin: Unable to transfer file: ' + filename));
-                    }
-
-                    var distName = path.join(options.to, path.basename(filename, content));
-
-                    compilation.assets[distName] = {
-                        source: function() {
-                            return content;
-                        },
-                        size: function() {
-                            return content.length;
-                        }
-                    };
-
-                    next();
-                },
-                function(err) {
-                    if (err) {
-                        compilation.errors.push(new Error('TransferWebpackPlugin: Something wrong'));
-                    }
-
-                    cb();
-                });
-        });
-    };
-}
