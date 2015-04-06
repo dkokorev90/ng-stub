@@ -16,15 +16,14 @@ var plugins = [
     new webpack.DefinePlugin({
         ENV: JSON.stringify(env),
         IS_DEV: env === 'development',
-        VERSION: JSON.stringify(require('./package.json').version),
-        ON_TEST: env === 'test'
+        VERSION: JSON.stringify(require('./package.json').version)
     }),
 
     new webpack.ProvidePlugin({
         _: 'lodash'
     }),
 
-    new webpack.optimize.CommonsChunkPlugin('common', 'common.build.js', null, Infinity),
+    new webpack.optimize.CommonsChunkPlugin('common', 'common.[chunkhash:8].js', null, Infinity),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(true),
 
@@ -68,8 +67,8 @@ module.exports = {
 
     output: {
         path: distDir,
-        filename: '[name].build.js',
-        chunkFilename: '[name].chunk.js'
+        filename: '[name].[chunkhash:8].js',
+        chunkFilename: '[name].chunk.[chunkhash:8].js'
     },
 
     module: {
